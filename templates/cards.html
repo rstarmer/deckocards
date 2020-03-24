@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Cards Workout{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      }
+  </style>
+{% endblock %}
+{% block content %}
+  <h1>Cards</h1>
+  <h2 class="important">
+    Let's work out!
+  </h2>
+  {% for r in rep_set %}
+  <p> Set {{ r }}
+  </p>
+    <ul>
+        {% for n in range(1,14) %}
+        <li><h3>
+            {{ (cards[r*n-1]|int)%13+1 }} {{ suits[(cards[n*r-1]|int)//13] }}
+        </h3></li>
+        {% endfor %}
+    </ul>
+    {% if next_set != None %}
+    <p><a href="{{ next_set }}">Next Set</a></p>
+    {% endif %}
+    {% endfor %}
+{% endblock %}

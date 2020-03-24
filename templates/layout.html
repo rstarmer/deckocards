@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Deck of Cards</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2020 by <a href="http://about.me/rstarmer/">Robert Starmer</a>.
+      {% endblock %}
+    </div>
+  </body>
+</html>
