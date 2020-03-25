@@ -3,31 +3,93 @@
 {% block head %}
   {{ super() }}
   <style type="text/css">
-    .important { color: #336699; }
+    .important { color: #336699; font-family: Verdana, Geneva, Tahoma, sans-serif; }
+    p.text { font-family: Verdana, Geneva, Tahoma, sans-serif; }
     ul {
       list-style-type: none;
       margin: 0;
       padding: 0;
       }
+    table, th, td {
+          border-collapse: collapse; 
+          padding: 6px; 
+          text-align:center;
+          min-width: 100px;
+      }
+    .green{
+      background : lightgreen;
+    }
+    .blue{
+      background : lightblue;
+    }
+
+    button {
+      min-width: 150px;
+      min-height: 25px;
+      font-size: 1em;
+    }
+
   </style>
+  <script>
+    function toggle_color(n){
+      document.getElementById(n).classList="exercise green";
+    };
+    function previous(rep_set) {
+      document.getElementById("rep_set_value").value=--rep_set;
+      document.forms.getElementById('rep_form').submit();
+      //document.getElementById('rep_form').submit();
+    }
+    function next(rep_set) {
+      document.getElementById("rep_set_value").value=++rep_set;
+      //document.forms.getElementById('rep_form').submit();
+      document.getElementById('rep_form').submit();
+    }
+  </script>
+
 {% endblock %}
 {% block content %}
-  <h1>Cards</h1>
-  <h2 class="important">
-    Let's work out!
-  </h2>
+
   {% for r in rep_set %}
-  <p> Set {{ r }}
+  <p class="important"> Set {{ r }}
   </p>
-    <ul>
-        {% for n in range(1,14) %}
-        <li><h3>
-            {{ (cards[r*n-1]|int)%13+1 }} {{ suits[(cards[n*r-1]|int)//13] }}
-        </h3></li>
-        {% endfor %}
-    </ul>
-    {% if next_set != None %}
-    <p><a href="{{ next_set }}">Next Set</a></p>
+    <table>
+      {% for n in range(1,14) %}
+      <tr>
+        <td colspan="2">
+          <button class="exercise blue" id="button{{n}}" onclick=toggle_color("button{{n}}")><strong>{{ (cards[r*n-1]|int)%13+1 }} {{ suits[(cards[n*r-1]|int)//13] }}</strong></button>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </table>
+  <form id="rep_form" method="get">
+    <table>
+      <tr>
+        <td>
+    {% if r > 1 %}
+        <button type=submit onclick=previous("{{r}}")>&lt; Prev Set</button>
     {% endif %}
+        </td>
+        <td>
+    {% if r < 4 %}
+        <button type=submit form="rep_form" formaction="" onclick=next("{{r}}")>Next Set &gt;</button>
+    {% endif %}
+        </td>
+      </tr>
+    </table>    
+    <p>Exercises</p>
+    <table>
+      <tr><td>
+        <input type="text" name="diamonds" value="{{suits[0]}}"></td>
+        <td><input type="text" name="spades" value="{{suits[1]}}"></td>
+      </tr>
+      <tr>
+        <td><input type="text" name="clubs" value="{{suits[2]}}"></td>
+        <td><input type="text" name="hearts" value="{{suits[3]}}"></td>
+      </tr>
+    </table>
+    <input type="text" hidden="true" name="seed" value="{{ seed }}" />
+    <input id="rep_set_value" type="text" hidden="true" name="set" value="{{ r+1 }}" />
+ </form>
     {% endfor %}
 {% endblock %}
